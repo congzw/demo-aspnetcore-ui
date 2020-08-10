@@ -1,0 +1,15 @@
+<template>
+    <div style="color:red">
+        {{text}}
+    </div>
+</template>
+<script>
+    define(["Vue"], function (Vue) {
+        Vue.component("my-component2", {
+            template: template, // the variable template will be injected
+            data: function () {
+                return { "text": "From C2" };
+            }
+        });
+    });
+</script>
