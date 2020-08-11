@@ -1,36 +1,17 @@
-﻿@using System.IO
-@using Common
+﻿@using Common
 @using Microsoft.AspNetCore.Hosting
 @inject IHostingEnvironment HostingEnvironment
 @{
     var bagsHolder = BagsHolder.Resolve();
     var myApp = bagsHolder.GetBag("myApp", true);
 
-    var vueComponents = myApp.MyGetIf("vueComponents", BagsHelper.Create(), true);
     var init = myApp.MyGetIf("init", false, true);
+    var vueComponents = myApp.MyGetIf("vueComponents", BagsHelper.Create(), true);
     if (!init)
     {
-        //find *.vue auto register => wwwroot, 
-        var webRootPath = HostingEnvironment.WebRootPath; // => base/wwwroot
-        var contentRootPath = HostingEnvironment.ContentRootPath; // => base
-        //var areasPath = System.IO.Path.Combine(HostingEnvironment.ContentRootPath, "Areas"); // => base/Areas
-        var vueFiles = Directory.GetFiles(contentRootPath, "*.vue", SearchOption.AllDirectories);
-        foreach (var vueFile in vueFiles)
+        foreach (var theKey in vueComponents.Keys)
         {
-            var fileInfo = new FileInfo(vueFile);
-            var requestPath = fileInfo.FullName
-                .Replace(webRootPath, string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace(contentRootPath, string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace('\\', '/')
-                .TrimEnd('/')
-                .TrimStart('/');
-
-            var componentKey = System.IO.Path.GetFileNameWithoutExtension(fileInfo.Name);
-
-            vueComponents.MySet(componentKey, Url.Content("~/" + requestPath));
-            //todo: support register by theme
-            //todo: check same key and throws
-            //todo: fix linux path case in boots static file logic
+            vueComponents[theKey] = Url.Content("~" + vueComponents[theKey]);
         }
         <h2>Init Completed!</h2>
         myApp.MySet("init", true);

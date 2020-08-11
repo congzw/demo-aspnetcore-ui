@@ -34,7 +34,8 @@ namespace NbSites.Web
             }
 
             app.UseMyStaticFiles(_env, _logger);
-            
+            app.UseMyVueFiles(_env, _logger);
+
             //do not forget to add[Area("Foo")] in controllers of area
             app.UseMvc(routes =>
             {
