@@ -10,20 +10,27 @@
     var init = myApp.MyGetIf("init", false, true);
     if (!init)
     {
-        //find *.vue auto register
-        var contentRootPath = HostingEnvironment.ContentRootPath;
-        var webRootPath = HostingEnvironment.WebRootPath;
+        //find *.vue auto register => wwwroot, 
+        var webRootPath = HostingEnvironment.WebRootPath; // => base/wwwroot
+        var contentRootPath = HostingEnvironment.ContentRootPath; // => base
+        //var areasPath = System.IO.Path.Combine(HostingEnvironment.ContentRootPath, "Areas"); // => base/Areas
         var vueFiles = Directory.GetFiles(contentRootPath, "*.vue", SearchOption.AllDirectories);
         foreach (var vueFile in vueFiles)
         {
             var fileInfo = new FileInfo(vueFile);
-            var requestPath = fileInfo.FullName.Replace(webRootPath, string.Empty, StringComparison.OrdinalIgnoreCase);
-            requestPath = requestPath.Replace(contentRootPath, string.Empty, StringComparison.OrdinalIgnoreCase);
-            requestPath = requestPath.Replace('\\', '/').TrimEnd('/').TrimStart('/');
+            var requestPath = fileInfo.FullName
+                .Replace(webRootPath, string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace(contentRootPath, string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace('\\', '/')
+                .TrimEnd('/')
+                .TrimStart('/');
 
-            var fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fileInfo.Name);
-            vueComponents.MySet(fileNameWithoutExtension, Url.Content("~/" + requestPath));
+            var componentKey = System.IO.Path.GetFileNameWithoutExtension(fileInfo.Name);
+
+            vueComponents.MySet(componentKey, Url.Content("~/" + requestPath));
+            //todo: support register by theme
             //todo: check same key and throws
+            //todo: fix linux path case in boots static file logic
         }
         <h2>Init Completed!</h2>
         myApp.MySet("init", true);
