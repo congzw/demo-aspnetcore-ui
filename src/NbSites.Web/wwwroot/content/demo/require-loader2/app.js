@@ -12,28 +12,25 @@
     }
 });
 
-//require(["vue", "ELEMENT", "httpVueLoader"], function (Vue, ele, httpVueLoader) {
-
-//    //全局注册
-//    Vue.use(ele);
-//    var app = new Vue({
-//        el: "#app",
-//        components: {
-//            'demo-timeline': httpVueLoader('./demo-timeline.vue'),
-//            'demo-complex': httpVueLoader('./demo-complex.vue')
-//        }
-//    });
-//    return app;
-//});
-
 require(["vue", "ELEMENT", "httpVueLoader"], function (Vue, ele, httpVueLoader) {
 
-    //全局注册
     Vue.use(ele);
+
+    //全局注册
     Vue.component('demo-timeline', httpVueLoader('./demo-timeline.vue'));
     Vue.component('demo-complex', httpVueLoader('./demo-complex.vue'));
     var app = new Vue({
         el: "#app"
     });
+    
+    //局部注册，无法满足子组件的嵌套！
+    //var app = new Vue({
+    //    el: "#app",
+    //    components: {
+    //        'demo-timeline': httpVueLoader('./demo-timeline.vue'),
+    //        'demo-complex': httpVueLoader('./demo-complex.vue')
+    //    }
+    //});
+
     return app;
 });

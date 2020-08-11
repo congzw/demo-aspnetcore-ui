@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="block">
         <h2>{{totalCount}}</h2>
-        <button v-on:click="addCount()">title: {{foo}}</button>
+        <button v-on:click="addCount()">DEMO: {{foo}}</button>
         <el-timeline>
             <el-timeline-item v-for="(activity, index) in activities"
                               :key="index"
