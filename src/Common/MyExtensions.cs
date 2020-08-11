@@ -45,5 +45,30 @@ namespace Common
             }
             return null;
         }
+
+        public static IDictionary<string, object> MySet(this IDictionary<string, object> dictionary, string key, object value)
+        {
+            if (dictionary == null) throw new ArgumentNullException(nameof(dictionary));
+            dictionary[key] = value;
+            return dictionary;
+        }
+
+        public static T MyGetIf<T>(this IDictionary<string, object> dictionary, string key, T defaultValue, bool setIfNotExist = false)
+        {
+            if (dictionary == null) throw new ArgumentNullException(nameof(dictionary));
+
+            if (dictionary.ContainsKey(key))
+            {
+                return (T)dictionary[key];
+            }
+
+            if (!setIfNotExist)
+            {
+                return defaultValue;
+            }
+
+            dictionary[key] = defaultValue;
+            return defaultValue;
+        }
     }
 }

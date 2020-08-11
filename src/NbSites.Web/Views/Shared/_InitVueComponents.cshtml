@@ -1,0 +1,39 @@
+﻿@using System.IO
+@using Common
+@using Microsoft.AspNetCore.Hosting
+@inject IHostingEnvironment HostingEnvironment
+@{
+    var bagsHolder = BagsHolder.Resolve();
+    var myApp = bagsHolder.GetBag("myApp", true);
+
+    var vueComponents = myApp.MyGetIf("vueComponents", BagsHelper.Create(), true);
+    var init = myApp.MyGetIf("init", false, true);
+    if (!init)
+    {
+        //find *.vue auto register
+        var contentRootPath = HostingEnvironment.ContentRootPath;
+        var webRootPath = HostingEnvironment.WebRootPath;
+        var vueFiles = Directory.GetFiles(contentRootPath, "*.vue", SearchOption.AllDirectories);
+        foreach (var vueFile in vueFiles)
+        {
+            var fileInfo = new FileInfo(vueFile);
+            var requestPath = fileInfo.FullName.Replace(webRootPath, string.Empty, StringComparison.OrdinalIgnoreCase);
+            requestPath = requestPath.Replace(contentRootPath, string.Empty, StringComparison.OrdinalIgnoreCase);
+            requestPath = requestPath.Replace('\\', '/').TrimEnd('/').TrimStart('/');
+
+            var fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fileInfo.Name);
+            vueComponents.MySet(fileNameWithoutExtension, Url.Content("~/" + requestPath));
+            //todo: check same key and throws
+        }
+        <h2>Init Completed!</h2>
+        myApp.MySet("init", true);
+    }
+}
+<hr />
+<h2>ContentRootPath: @HostingEnvironment.ContentRootPath</h2>
+<h2>WebRootPath: @HostingEnvironment.WebRootPath</h2>
+<hr />
+@foreach (var vueComponent in vueComponents)
+{
+    <p>@vueComponent.Key : @vueComponent.Value</p>
+}
