@@ -5,7 +5,7 @@
     var bagsHolder = BagsHolder.Resolve();
     var myApp = bagsHolder.GetBag("myApp", true);
 
-    var init = myApp.MyGetIf("init", false, true);
+    var init = myApp.MyGetIf("initVueComponentsUrl", false, true);
     var vueComponents = myApp.MyGetIf("vueComponents", BagsHelper.Create(), true);
     if (!init)
     {
@@ -14,7 +14,7 @@
             vueComponents[theKey] = Url.Content("~" + vueComponents[theKey]);
         }
         <h2>Init Completed!</h2>
-        myApp.MySet("init", true);
+        myApp.MySet("initVueComponentsUrl", true);
     }
 }
 <hr />
